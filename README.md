@@ -9,10 +9,10 @@ Install Node.js and npm (full guide: https://nodesource.com/blog/installing-node
 1. Clone the repo
 ```
 git clone https://github.com/rmmshv/crypto-wallet.git
-cd crypto-wallet
 ```
 2. Run the program
 ```
+cd crypto-wallet
 node wallet.js
 ```
 # Usage
