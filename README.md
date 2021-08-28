@@ -48,7 +48,7 @@ This is a simple implementation of the asymmetric RSA algorithm that allows user
 # Licence
 MIT
 
-# Acknowledgements and Resources
+# Acknowledgments and Resources
 This project was created to learn the basics of cryptography and gain hands-on experience in implementing asymmetric encryption. The following resources were used:
 - https://nodejs.org/api/crypto.html crypto standart library documentation
 - https://wizardforcel.gitbooks.io/practical-cryptography-for-developers-book/content/
