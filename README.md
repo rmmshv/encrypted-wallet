@@ -18,14 +18,33 @@ node wallet.js
 # Usage
 This is a simple implementation of the asymmetric RSA algorithm that allows users to ecrypt, decrypt, and sign messages. 
 - _First, the program generates an asymmetric key pair:_
-<img width="1095" alt="generate" src="https://user-images.githubusercontent.com/32555704/131212007-589a4989-d34d-4dd3-a755-fd15e0788cbc.png">
+```c++
+const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {modulusLength: 2048, });
+```
 "crypto.generateKeyPairSync(type, options)" takes two arguments:<br />
    1. key type (rsa in this case) <br />
    2. key size in bits <br />
 <br />
 
 * _Next, we prompt user for data and proceed with encryption:_
-<img width="718" alt="encrypt" src="https://user-images.githubusercontent.com/32555704/131212197-a0ad7c61-36f7-4ed7-9fff-44a1b7457e7b.png">
+```c++
+let prompt = require("prompt-sync")();
+let input_data = prompt("Please type the message you wish to encrypt and press enter: ");
+
+// ENCRYPT THE DATA
+let encrypted_msg = crypto.publicEncrypt(
+    {
+        key: publicKey, // key used to encrypt the data (generated in the previous step)
+        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, // OAEP padding scheme
+        oaepHash: "sha256", // SHA256 hashing algorithm
+    },
+    Buffer.from(input_data) // convert data from string to buffer format
+);
+
+// display the output
+console.log('\nYour encrypted message is:\n\n', encrypted_msg.toString("base64"), '\n');
+
+```
 "crypto.publicEncrypt(key, buffer)" method uses: <br />
   1. a PEM encoded key, <br />
   2. Optimal Asymmetric Encryption Padding (OAEP) scheme, <br />
@@ -34,17 +53,64 @@ This is a simple implementation of the asymmetric RSA algorithm that allows user
 <br />
 
 + _Signing_
-<img width="665" alt="sign" src="https://user-images.githubusercontent.com/32555704/131212687-f1798a05-0275-4bcc-8552-0fe33d32db4b.png">
+```c++
+let signed_msg = input_data; // data to sign
+
+// generate a signature
+let signature = crypto.sign("sha256", Buffer.from(signed_msg), {
+    key: privateKey,
+    padding: crypto.constants.RSA_PKCS1_PSS_PADDING,
+    }
+);
+
+// display the signature in a string format
+console.log("\nSignature:\n\n",signature.toString("base64"), '\n');
+```
 "crypto.sign(algorithm, data, key[, callback])"
 <br />
 
 - _Verifying the signature_
-<img width="593" alt="verify" src="https://user-images.githubusercontent.com/32555704/131212738-4a07bea9-74ab-443d-a393-6f47371ad4b4.png">
+```c++
+let is_verified = crypto.verify("sha256", Buffer.from(signed_msg), {
+    key: publicKey,
+    padding: crypto.constants.RSA_PKCS1_PSS_PADDING,
+    },
+    signature
+);
+```
 <br />
 
 * _If signature is verified, proceed with decryption:_
-<img width="813" alt="decryption" src="https://user-images.githubusercontent.com/32555704/131212777-85db5eb9-6e78-43bc-8e53-e168bb851e6c.png">
+```c++
+if (is_verified == true) {
 
+    console.log("signature verified: ", is_verified + '\n');
+
+    // DECRYPT THE DATA
+    let yes_no = prompt("Press y to decrypt the message. Press n to abort.\n");
+    if (yes_no == 'y') {
+
+    let decrypted_msg = crypto.privateDecrypt(
+    {
+        key: privateKey,
+        // we need to specify the same hash and padding scheme that we used to encrypt the data
+        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+        oaepHash: "sha256",
+    },
+    encrypted_msg
+    );
+    // convert data from the Buffer type to a string
+    console.log("Your decrypted message is:\n\n", decrypted_msg.toString(), '\n');
+    }
+    else {
+     return;
+    }
+}
+else {
+    console.log("Signature was not verified.");
+    return;
+}
+```
 # Licence
 MIT
 
