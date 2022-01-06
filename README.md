@@ -1,6 +1,6 @@
 # About
 
-Message encryption, decryption, and signing based on the RSA asymmetric cryptography algorithm implemented in Node.js.
+Message encryption, decryption, and signing based on the RSA asymmetric cryptography algorithm.
 
 # Prerequisites
 Install Node.js and npm (full guide: https://nodesource.com/blog/installing-node-js-tutorial-using-nvm-on-mac-os-x-and-ubuntu/)
